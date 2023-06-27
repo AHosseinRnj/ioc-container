@@ -29,7 +29,7 @@ namespace ioc_container
             if (!_map.TryGetValue(typeToResolve, out implementation))
                 throw new InvalidOperationException($"No implementation added for {typeToResolve}");
 
-            if(_instanceMap.ContainsKey(implementation))
+            if (_instanceMap.ContainsKey(implementation))
                 return _instanceMap[implementation];
 
             // Get constructor
@@ -52,6 +52,13 @@ namespace ioc_container
             return instance;
         }
 
-        public void Dispose() { }
+        public void Dispose()
+        {
+            foreach (var instance in _instanceMap.Values)
+            {
+                if (instance is IDisposable disposable)
+                    disposable.Dispose();
+            }
+        }
     }
 }
